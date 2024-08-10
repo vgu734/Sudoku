@@ -1,0 +1,41 @@
+plugins {
+    id 'org.springframework.boot' version '3.0.0'
+    id 'io.spring.dependency-management' version '1.1.1'
+    id 'java'
+}
+
+group = 'com.vgu734'
+version = '0.0.1'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+manifest {
+    attributes(
+        'Main-Class': 'com.vgu734.sudoku.SudokuApp'
+    )
+}
+
+task dockerBuild(type: Exec) {
+    dependsOn bootJar
+    description = 'Builds Docker image with the application jar'
+    group = 'Docker'
+
+    // Set the Docker build command
+    commandLine 'docker', 'build', '-t', "${project.name}:${project.version}", '.'
+    
+    // Configure the environment variables and working directory
+    environment 'JAR_FILE', "build/libs/${project.name}-${project.version}.jar"
+    workingDir = project.rootDir
+}
