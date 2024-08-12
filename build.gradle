@@ -13,8 +13,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.0.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.0'
 }
 
 test {
@@ -32,10 +33,8 @@ task dockerBuild(type: Exec) {
     description = 'Builds Docker image with the application jar'
     group = 'Docker'
 
-    // Set the Docker build command
     commandLine 'docker', 'build', '-t', "${project.name}:${project.version}", '.'
-    
-    // Configure the environment variables and working directory
+
     environment 'JAR_FILE', "build/libs/${project.name}-${project.version}.jar"
     workingDir = project.rootDir
 }
