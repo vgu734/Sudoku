@@ -6,33 +6,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SudokuBoard {
-	private int[][] board;
+	private Integer[][] board;
 	private static final int SIZE = 9;
 	
 	private static final Logger logger = LoggerFactory.getLogger(SudokuBoard.class);
 	
 	public SudokuBoard() {
-		this.board = new int[SIZE][SIZE];
+		this.board = new Integer[SIZE][SIZE];
 	}
 	
-	public int[][] getBoard() {
+	public Integer[][] getBoard() {
 		return this.board;
 	}
 	
 	public void initializeBlankBoard() {
 		for(int i=0; i<SIZE; i++) {
 			for(int j=0; j<SIZE; j++) {
-				this.board[i][j] = 0;
+				this.board[i][j] = null; // Set empty cells to null
 			}
 		}
 	}
 	
 	public void initializeBoard(Difficulty diff) {
-		for(int i=0; i<SIZE; i++) {
-			for(int j=0; j<SIZE; j++) {
-				this.board[i][j] = 0;
-			}
-		}
+		initializeBlankBoard(); // Use the updated method to initialize to null
 		
 		switch (diff) {
 		case EASY:
@@ -58,7 +54,7 @@ public class SudokuBoard {
 		while(count < n) {
 			int row = random.nextInt(SIZE);
 			int col = random.nextInt(SIZE);
-			int val = random.nextInt(SIZE);
+			int val = random.nextInt(SIZE) + 1; // Sudoku values are typically 1-9
 			
 			if(isValid(row, col, val)) {
 				this.board[row][col] = val;
@@ -70,14 +66,14 @@ public class SudokuBoard {
 	private boolean isValid(int row, int col, int val) {
 		// Check row
         for(int i=0; i<SIZE; i++) {
-            if(board[row][i] == val) {
+            if(this.board[row][i] != null && this.board[row][i] == val) {
                 return false;
             }
         }
 
         // Check column
         for(int i=0; i<SIZE; i++) {
-            if(board[i][col] == val) {
+            if(this.board[i][col] != null && this.board[i][col] == val) {
                 return false;
             }
         }
@@ -88,7 +84,7 @@ public class SudokuBoard {
 
         for(int i=startRow; i < startRow+3; i++) {
             for(int j=startCol; j < startCol+3; j++) {
-                if(board[i][j] == val) {
+                if(this.board[i][j] != null && this.board[i][j] == val) {
                     return false;
                 }
             }
@@ -97,7 +93,7 @@ public class SudokuBoard {
         return true;
 	}
 	
-	public void setBoard(int[][] board) {
+	public void setBoard(Integer[][] board) {
 		this.board = board;
 	}
 	
@@ -119,7 +115,7 @@ public class SudokuBoard {
 				if(j>0) {
 					sb.append(",");
 				}
-				sb.append(this.board[i][j]);
+				sb.append(this.board[i][j] != null ? this.board[i][j] : "null");
 			}
 			sb.append("]");
 		}
