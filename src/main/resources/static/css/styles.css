@@ -1,3 +1,91 @@
 body {
-	color: red;
+    font-family: 'Arial', sans-serif;
+    /*background-color: #f4f4f4;*/
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+form {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+select, button {
+    font-size: 1rem;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+td {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+input[type="text"] {
+    width: 100%;
+    height: 100%;
+    border: none;
+    font-size: 1rem;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 0;
+    /*background-color: #fff;*/
+}
+
+input[type="text"]:focus {
+    outline: none;
+    /*border: 1px solid #007bff;*/
+}
+
+.highlight {
+	background-color: #007bffad;
+}
+
+table td:nth-child(1) {
+    border-left: 2px solid #333;
+}
+
+table tr:nth-child(1) td {
+    border-top: 2px solid #333;
+}
+
+table td:nth-child(3n) {
+    border-right: 2px solid #333;
+}
+
+table tr:nth-child(3n) td {
+    border-bottom: 2px solid #333;
 }

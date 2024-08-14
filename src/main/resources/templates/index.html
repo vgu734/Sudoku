@@ -2,15 +2,53 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Simple Page</title>
+    <title>Sudoku</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <h1>Welcome to My Simple Page</h1>
-    <p>This is a sample page with external CSS styling.</p>
-    
-    <div class="container">
-        <p class="highlight">Highlighted text with custom styling.</p>
-    </div>
+    <form action="/start" method="post">
+    	<div>
+    		<label for="diff">Select Difficulty:</label>
+	        <select name="diff" id="diff">
+	            <option value="EASY" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).EASY}">Easy</option>
+	            <option value="MEDIUM" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).MEDIUM}">Medium</option>
+	            <option value="HARD" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).HARD}">Hard</option>
+	            <option value="EXTREME" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).EXTREME}">Extreme</option>
+	        </select>
+    	</div>
+        <button type="submit">Start</button>
+    </form>
+    <table>
+        <tr th:each="row : ${board.board}">
+            <td class="cell" th:each="cell : ${row}">
+                <input type="text" name="cell" th:value="${cell}" />
+            </td>
+        </tr>
+    </table>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cells = document.querySelectorAll('td.cell');
+        
+        cells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                cells.forEach(c => c.classList.remove('highlight'));
+                
+                const input = cell.querySelector('input');
+                input.select();
+                
+                const rowIndex = cell.parentElement.rowIndex;
+                const colIndex = cell.cellIndex;
+                
+                cells.forEach(c => {
+                    const isSameRow = c.parentElement.rowIndex === rowIndex;
+                    const isSameCol = c.cellIndex === colIndex;
+                    if (isSameRow || isSameCol) {
+                        c.classList.add('highlight');
+                    }
+                });
+            });
+        });
+    });
+	</script>
 </body>
 </html>
