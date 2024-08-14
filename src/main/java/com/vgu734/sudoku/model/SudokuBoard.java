@@ -22,13 +22,13 @@ public class SudokuBoard {
 	public void initializeBlankBoard() {
 		for(int i=0; i<SIZE; i++) {
 			for(int j=0; j<SIZE; j++) {
-				this.board[i][j] = null; // Set empty cells to null
+				this.board[i][j] = null;
 			}
 		}
 	}
 	
 	public void initializeBoard(Difficulty diff) {
-		initializeBlankBoard(); // Use the updated method to initialize to null
+		initializeBlankBoard();
 		
 		switch (diff) {
 		case EASY:
@@ -54,7 +54,7 @@ public class SudokuBoard {
 		while(count < n) {
 			int row = random.nextInt(SIZE);
 			int col = random.nextInt(SIZE);
-			int val = random.nextInt(SIZE) + 1; // Sudoku values are typically 1-9
+			int val = random.nextInt(SIZE) + 1;
 			
 			if(isValid(row, col, val)) {
 				this.board[row][col] = val;
@@ -104,22 +104,20 @@ public class SudokuBoard {
 		}
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("[");
 		
 		for(int i=0; i<SIZE; i++) {
 			if(i>0) {
-				sb.append(",");
+				sb.append(",\n");
 			}
 			sb.append("[");
 			for(int j=0; j<SIZE; j++) {
 				if(j>0) {
-					sb.append(",");
+					sb.append(" ");
 				}
-				sb.append(this.board[i][j] != null ? this.board[i][j] : "null");
+				sb.append(this.board[i][j] != null ? this.board[i][j] : "  ");
 			}
 			sb.append("]");
 		}
-		sb.append("]");
 		
 		return sb.toString();
 	}

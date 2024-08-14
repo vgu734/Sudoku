@@ -1,6 +1,5 @@
 body {
     font-family: 'Arial', sans-serif;
-    /*background-color: #f4f4f4;*/
     color: #333;
     margin: 0;
     padding: 0;
@@ -12,10 +11,19 @@ body {
 }
 
 form {
-    margin-bottom: 2rem;
+    background: #ddd;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    align-self: center;
+}
+
+.selector {
+	margin-left: 1rem;
+}
+
+.submit {
+	margin-right: 1rem;
 }
 
 label {
@@ -62,16 +70,15 @@ input[type="text"] {
     text-align: center;
     box-sizing: border-box;
     padding: 0;
-    /*background-color: #fff;*/
 }
 
 input[type="text"]:focus {
     outline: none;
-    /*border: 1px solid #007bff;*/
 }
 
 .highlight {
-	background-color: #007bffad;
+	background-color: rgba(0, 123, 255, 0.2);
+	
 }
 
 table td:nth-child(1) {

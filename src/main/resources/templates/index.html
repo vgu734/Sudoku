@@ -6,8 +6,8 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <form action="/start" method="post">
-    	<div>
+    <form action="/start" id="header" method="post">
+    	<div class="selector">
     		<label for="diff">Select Difficulty:</label>
 	        <select name="diff" id="diff">
 	            <option value="EASY" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).EASY}">Easy</option>
@@ -16,9 +16,9 @@
 	            <option value="EXTREME" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).EXTREME}">Extreme</option>
 	        </select>
     	</div>
-        <button type="submit">Start</button>
+        <button type="submit" class="submit">Set Board</button>
     </form>
-    <table>
+    <table id="table">
         <tr th:each="row : ${board.board}">
             <td class="cell" th:each="cell : ${row}">
                 <input type="text" name="cell" th:value="${cell}" />
@@ -31,24 +31,41 @@
         
         cells.forEach(cell => {
             cell.addEventListener('click', () => {
-                cells.forEach(c => c.classList.remove('highlight'));
-                
+                // Remove highlight from all <input> elements first
+                document.querySelectorAll('input.highlight').forEach(input => input.classList.remove('highlight'));
+
+                // Add highlight to all <input> elements in the same row or column
                 const input = cell.querySelector('input');
+                input.classList.add('highlight');
                 input.select();
                 
                 const rowIndex = cell.parentElement.rowIndex;
                 const colIndex = cell.cellIndex;
                 
                 cells.forEach(c => {
-                    const isSameRow = c.parentElement.rowIndex === rowIndex;
-                    const isSameCol = c.cellIndex === colIndex;
-                    if (isSameRow || isSameCol) {
-                        c.classList.add('highlight');
+                    const cInput = c.querySelector('input');
+                    if (cInput) {
+                        const isSameRow = c.parentElement.rowIndex === rowIndex;
+                        const isSameCol = c.cellIndex === colIndex;
+                        if (isSameRow || isSameCol) {
+                            cInput.classList.add('highlight');
+                        }
                     }
                 });
             });
         });
     });
+
+    
+    function updateDependentWidth() {
+        const table = document.getElementById('table');
+        const tableWidth = table.offsetWidth;
+        
+        document.getElementById('header').style.width = `${tableWidth}px`;
+    }
+    
+    window.onload = updateDependentWidth;
+    window.onresize = updateDependentWidth;
 	</script>
 </body>
 </html>
