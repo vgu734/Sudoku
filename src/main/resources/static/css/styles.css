@@ -25,6 +25,10 @@ form {
 	margin-right: 1rem;
 }
 
+.read-only {
+	font-weight: bold;
+}
+
 label {
     font-size: 1rem;
     margin-bottom: 0.5rem;

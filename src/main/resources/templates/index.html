@@ -21,7 +21,11 @@
     <table id="table">
         <tr th:each="row : ${board.board}">
             <td class="cell" th:each="cell : ${row}">
-                <input type="text" name="cell" th:value="${cell}" />
+                <input type="text" 
+                       name="cell" 
+                       th:value="${cell.value}"
+                       th:attr="readonly=${cell.readOnly ? 'readonly' : null}"
+                       th:classappend="${cell.readOnly ? ' read-only' : ''}" />
             </td>
         </tr>
     </table>
@@ -63,6 +67,10 @@
             let previousValue = input.value;
 
             input.addEventListener('input', () => {
+            	if (input.hasAttribute('readonly')) {
+                    return;
+                }
+            	
                 const value = input.value;
                 if (/^[1-9]$/.test(value)) {
                     input.setAttribute('value', value);

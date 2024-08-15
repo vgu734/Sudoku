@@ -6,23 +6,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SudokuBoard {
-	private Integer[][] board;
+	private Cell[][] board;
 	private static final int SIZE = 9;
 	
 	private static final Logger logger = LoggerFactory.getLogger(SudokuBoard.class);
 	
 	public SudokuBoard() {
-		this.board = new Integer[SIZE][SIZE];
+		this.board = new Cell[SIZE][SIZE];
 	}
 	
-	public Integer[][] getBoard() {
+	public Cell[][] getBoard() {
 		return this.board;
 	}
 	
 	public void initializeBlankBoard() {
 		for(int i=0; i<SIZE; i++) {
 			for(int j=0; j<SIZE; j++) {
-				this.board[i][j] = null;
+				this.board[i][j] = new Cell(null, false);
 			}
 		}
 	}
@@ -57,7 +57,7 @@ public class SudokuBoard {
 			int val = random.nextInt(SIZE) + 1;
 			
 			if(isValid(row, col, val)) {
-				this.board[row][col] = val;
+				this.board[row][col] = new Cell(val, true);
 				count++;
 			}
 		}
@@ -66,14 +66,14 @@ public class SudokuBoard {
 	private boolean isValid(int row, int col, int val) {
 		// Check row
         for(int i=0; i<SIZE; i++) {
-            if(this.board[row][i] != null && this.board[row][i] == val) {
+            if(this.board[row][i].getValue() != null && this.board[row][i].getValue() == val) {
                 return false;
             }
         }
 
         // Check column
         for(int i=0; i<SIZE; i++) {
-            if(this.board[i][col] != null && this.board[i][col] == val) {
+            if(this.board[i][col].getValue() != null && this.board[i][col].getValue() == val) {
                 return false;
             }
         }
@@ -84,7 +84,7 @@ public class SudokuBoard {
 
         for(int i=startRow; i < startRow+3; i++) {
             for(int j=startCol; j < startCol+3; j++) {
-                if(this.board[i][j] != null && this.board[i][j] == val) {
+                if(this.board[i][j].getValue() != null && this.board[i][j].getValue() == val) {
                     return false;
                 }
             }
@@ -93,7 +93,7 @@ public class SudokuBoard {
         return true;
 	}
 	
-	public void setBoard(Integer[][] board) {
+	public void setBoard(Cell[][] board) {
 		this.board = board;
 	}
 	
@@ -114,7 +114,7 @@ public class SudokuBoard {
 				if(j>0) {
 					sb.append(" ");
 				}
-				sb.append(this.board[i][j] != null ? this.board[i][j] : " ");
+				sb.append(this.board[i][j].getValue() != null ? this.board[i][j].getValue() : " ");
 			}
 			sb.append("]");
 		}
