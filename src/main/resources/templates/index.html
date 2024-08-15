@@ -67,14 +67,15 @@
             let previousValue = input.value;
 
             input.addEventListener('input', () => {
-            	if (input.hasAttribute('readonly')) {
+                if (input.hasAttribute('readonly')) {
                     return;
                 }
-            	
+                
                 const value = input.value;
-                if (/^[1-9]$/.test(value)) {
-                    input.setAttribute('value', value);
-                    previousValue = value;
+                const lastDigitMatch = value.match(/[1-9](?!.*[1-9])/);
+                if (value === "" || lastDigitMatch) {
+                	input.value = lastDigitMatch ? lastDigitMatch[0] : "";
+                    previousValue = lastDigitMatch ? lastDigitMatch[0] : "";
                 } else {
                     input.value = previousValue;
                 }
