@@ -114,7 +114,7 @@ public class SudokuBoard {
 				if(j>0) {
 					sb.append(" ");
 				}
-				sb.append(this.board[i][j] != null ? this.board[i][j] : "  ");
+				sb.append(this.board[i][j] != null ? this.board[i][j] : " ");
 			}
 			sb.append("]");
 		}
