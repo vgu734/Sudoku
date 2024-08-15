@@ -76,6 +76,11 @@
                 if (value === "" || lastDigitMatch) {
                 	input.value = lastDigitMatch ? lastDigitMatch[0] : "";
                     previousValue = lastDigitMatch ? lastDigitMatch[0] : "";
+                    
+                    const cell = input.closest('td.cell');
+                    if (cell) {
+                        cell.click();
+                    }
                 } else {
                     input.value = previousValue;
                 }
