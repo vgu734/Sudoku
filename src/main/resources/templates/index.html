@@ -7,15 +7,15 @@
 </head>
 <body>
     <form action="/start" id="header" method="post">
-    	<div class="selector">
-    		<label for="diff">Select Difficulty:</label>
-	        <select name="diff" id="diff">
-	            <option value="EASY" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).EASY}">Easy</option>
-	            <option value="MEDIUM" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).MEDIUM}">Medium</option>
-	            <option value="HARD" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).HARD}">Hard</option>
-	            <option value="EXTREME" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).EXTREME}">Extreme</option>
-	        </select>
-    	</div>
+        <div class="selector">
+            <label for="diff">Select Difficulty:</label>
+            <select name="diff" id="diff">
+                <option value="EASY" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).EASY}">Easy</option>
+                <option value="MEDIUM" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).MEDIUM}">Medium</option>
+                <option value="HARD" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).HARD}">Hard</option>
+                <option value="EXTREME" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).EXTREME}">Extreme</option>
+            </select>
+        </div>
         <button type="submit" class="submit">Set Board</button>
     </form>
     <table id="table">
@@ -40,7 +40,7 @@
                 
                 const rowIndex = cell.parentElement.rowIndex;
                 const colIndex = cell.cellIndex;
-                val = input.value;
+                const val = input.value;
                 
                 cells.forEach(c => {
                     const cInput = c.querySelector('input');
@@ -49,17 +49,31 @@
                         const isSameCol = c.cellIndex === colIndex;
                         
                         if (cInput.value !== '' && cInput.value === val) {
-							cInput.classList.add('select');
-						} else if (isSameRow || isSameCol) {
+                            cInput.classList.add('select');
+                        } else if (isSameRow || isSameCol) {
                             cInput.classList.add('highlight');
                         }
                     }
                 });
             });
         });
+
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            let previousValue = input.value;
+
+            input.addEventListener('input', () => {
+                const value = input.value;
+                if (/^[1-9]$/.test(value)) {
+                    input.setAttribute('value', value);
+                    previousValue = value;
+                } else {
+                    input.value = previousValue;
+                }
+            });
+        });
     });
 
-    
     function updateDependentWidth() {
         const table = document.getElementById('table');
         const tableWidth = table.offsetWidth;
@@ -69,6 +83,6 @@
     
     window.onload = updateDependentWidth;
     window.onresize = updateDependentWidth;
-	</script>
+    </script>
 </body>
 </html>
