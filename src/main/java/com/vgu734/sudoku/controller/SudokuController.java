@@ -32,6 +32,7 @@ public class SudokuController {
         logger.info("Hit get endpoint: '/'");
         SudokuBoard board = sudokuService.createBlankBoard();
         model.addAttribute("board", board);
+        
         return "index";
     }
 
@@ -41,6 +42,7 @@ public class SudokuController {
         SudokuBoard board = sudokuService.createNewBoard(diff);
         model.addAttribute("board", board);
         model.addAttribute("diff", diff);
+        
         return "index";
     }
 
@@ -50,14 +52,7 @@ public class SudokuController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("gameover", false);
-
-        int[][] dummyArray = new int[9][9];
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                dummyArray[i][j] = (i + j) % 3;
-            }
-        }
-        response.put("board", dummyArray);
+        response.put("conflicts", sudokuService.retrieveConflicts(board));
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

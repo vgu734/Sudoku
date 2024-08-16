@@ -19,4 +19,8 @@ public class SudokuService {
 		board.initializeBoard(diff);
 		return board;
 	}
+	
+	public boolean[][] retrieveConflicts(SudokuBoard board) {
+		return board.getConflicts();
+	}
 }

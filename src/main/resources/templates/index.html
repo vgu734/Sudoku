@@ -36,7 +36,6 @@
         cells.forEach(cell => {
             cell.addEventListener('click', () => {
                 deleteHighlights();
-                deleteConflictHighlights();
             	
                 const input = cell.querySelector('input');
                 if (input.value === '') return;
@@ -116,15 +115,15 @@
             }
             
             deleteConflictHighlights();
-            const conflicts = data.board;
+            const conflicts = data.conflicts;
             
             if (input.value) {
             	document.querySelectorAll('#table tr').forEach((rowElement, r) => {
                     rowElement.querySelectorAll('td input').forEach((cellElement, c) => {
-    					if (cellElement.value && conflicts[r][c] === 1) {
-    	                    cellElement.classList.add('conflict');
-    					} else if (cellElement.value && conflicts[r][c] === 2) {
+                    	if (cellElement.value && (r === input.closest('tr').rowIndex && c === input.closest('td').cellIndex && conflicts[r][c] === true)) {
     						cellElement.classList.add('conflict-select');
+    					} else if (cellElement.value && conflicts[r][c] === true) {
+    	                    cellElement.classList.add('conflict');
     					}
                     });
                 });

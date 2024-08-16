@@ -119,14 +119,12 @@ public class SudokuBoard {
                 return false;
             }
         }
-
         // Check column
         for (int i = 0; i < SIZE; i++) {
             if (this.board[i][col].getValue() != null && this.board[i][col].getValue() == val) {
                 return false;
             }
         }
-
         // Check 3x3 grid
         int startRow = row - row % 3;
         int startCol = col - col % 3;
@@ -142,8 +140,53 @@ public class SudokuBoard {
         return true;
     }
 
-    public int[][] getConflicts() {
-    	return new int[9][9];
+    public boolean[][] getConflicts() {
+        boolean[][] conflicts = new boolean[SIZE][SIZE];
+
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                Integer value = board[row][col].getValue();
+                if (value != null) {
+                    boolean hasConflict = checkRow(row, col, value) ||
+                                          checkColumn(row, col, value) ||
+                                          checkGrid(row, col, value);
+                    conflicts[row][col] = hasConflict;
+                }
+            }
+        }
+        
+        return conflicts;
+    }
+
+    private boolean checkRow(int row, int col, int value) {
+        for (int c = 0; c < SIZE; c++) {
+            if (board[row][c].getValue() != null && c != col && board[row][c].getValue() == value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkColumn(int row, int col, int value) {
+        for (int r = 0; r < SIZE; r++) {
+            if (board[r][col].getValue() != null && r != row && board[r][col].getValue() == value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkGrid(int row, int col, int value) {
+        int startRow = row - row % 3;
+        int startCol = col - col % 3;
+        for (int r = startRow; r < startRow + 3; r++) {
+            for (int c = startCol; c < startCol + 3; c++) {
+                if (board[r][c].getValue() != null && (r != row || c != col) && board[r][c].getValue() == value) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
