@@ -35,8 +35,8 @@
 
         cells.forEach(cell => {
             cell.addEventListener('click', () => {
-            	document.querySelectorAll('input.highlight').forEach(input => input.classList.remove('highlight'));
-                document.querySelectorAll('input.select').forEach(input => input.classList.remove('select'));
+                deleteHighlights();
+                deleteConflictHighlights();
             	
                 const input = cell.querySelector('input');
                 if (input.value === '') return;
@@ -74,6 +74,8 @@
                 if (value || input.value === '') {
                     input.setAttribute('value', input.value === '' ? '' : value[0]);
                     previousValue = input.value;
+                    
+                    deleteConflictHighlights();
                 } else {
                     input.setAttribute('value', previousValue);
                     input.value = previousValue;
@@ -86,7 +88,7 @@
             });
         });
     });
-    
+
     function updateBoard(input) {
         const board = [];
         document.querySelectorAll('#table tr').forEach((rowElement) => {
@@ -107,16 +109,39 @@
             },
             body: JSON.stringify({ board: board }),
         })
-        .then(response => {
-            if (response.ok) {
-                //window.location.reload();
-            } else {
-                throw new Error('Network response was not ok');
+        .then(response => response.json())
+        .then(data => {
+            if (data.gameover) {
+                console.log('game over!!');
+            }
+            
+            deleteConflictHighlights();
+            const conflicts = data.board;
+            
+            if (input.value) {
+            	document.querySelectorAll('#table tr').forEach((rowElement, r) => {
+                    rowElement.querySelectorAll('td input').forEach((cellElement, c) => {
+    					if (cellElement.value && conflicts[r][c] === 1) {
+    	                    cellElement.classList.add('conflict');
+    					} else if (cellElement.value && conflicts[r][c] === 2) {
+    						cellElement.classList.add('conflict-select');
+    					}
+                    });
+                });
             }
         })
         .catch(error => console.error('Error:', error));
     }
-
+    
+    function deleteHighlights() {
+    	document.querySelectorAll('input.highlight').forEach(input => input.classList.remove('highlight'));
+        document.querySelectorAll('input.select').forEach(input => input.classList.remove('select'));
+    }
+    
+    function deleteConflictHighlights() {
+        document.querySelectorAll('input.conflict').forEach(input => input.classList.remove('conflict'));
+        document.querySelectorAll('input.conflict-select').forEach(input => input.classList.remove('conflict-select'));
+    }
 
     function updateDependentWidth() {
         document.getElementById('header').style.width = `${document.getElementById('table').offsetWidth}px`;

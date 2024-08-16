@@ -92,7 +92,7 @@ input[type="text"]:focus {
 }
 
 .conflict-select {
-	background-color: rgba(255, 100, 100, 0.8);
+	background-color: rgba(255, 100, 100, 1);
 }
 
 table td:nth-child(1) {

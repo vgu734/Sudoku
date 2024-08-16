@@ -16,6 +16,10 @@ public class SudokuBoard {
     public Cell[][] getBoard() {
         return this.board;
     }
+    
+    public void setBoard(Cell[][] board) {
+        this.board = board;
+    }
 
     public void initializeBlankBoard() {
         for(int i=0; i<SIZE; i++) {
@@ -138,8 +142,8 @@ public class SudokuBoard {
         return true;
     }
 
-    public void setBoard(Cell[][] board) {
-        this.board = board;
+    public int[][] getConflicts() {
+    	return new int[9][9];
     }
 
     @Override
