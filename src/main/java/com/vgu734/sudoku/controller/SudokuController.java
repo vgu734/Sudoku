@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -38,6 +39,14 @@ public class SudokuController {
     	SudokuBoard board = sudokuService.createNewBoard(diff);
     	model.addAttribute("board", board);
     	model.addAttribute("diff", diff);
+        return "index";
+    }
+    
+    @PostMapping("/updateBoard")
+    public String updateBoard(@RequestBody SudokuBoard board, Model model) {
+    	logger.info("Hit post endpoint: '/updateBoard'\n" + board.toString());
+        
+    	model.addAttribute("board", board);
         return "index";
     }
 }

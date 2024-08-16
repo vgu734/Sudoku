@@ -152,7 +152,7 @@ public class SudokuBoard {
 
         for (int i = 0; i < SIZE; i++) {
             if (i > 0) {
-                sb.append(",\n");
+                sb.append("\n");
             }
             sb.append("[");
             for (int j = 0; j < SIZE; j++) {
