@@ -21,7 +21,7 @@ form {
 	margin-left: 1rem;
 }
 
-.submit {
+.start {
 	margin-right: 1rem;
 }
 
@@ -85,6 +85,14 @@ input[type="text"]:focus {
 
 .select {
 	background-color: rgba(0, 123, 255, 0.6);
+}
+
+.conflict {
+	background-color: rgba(255, 100, 100, 0.6);
+}
+
+.conflict-select {
+	background-color: rgba(255, 100, 100, 1);
 }
 
 table td:nth-child(1) {

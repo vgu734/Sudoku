@@ -16,7 +16,7 @@
                 <option value="EXTREME" th:selected="${diff == T(com.vgu734.sudoku.model.Difficulty).EXTREME}">Extreme</option>
             </select>
         </div>
-        <button type="submit" class="submit">Set Board</button>
+        <button type="submit" class="start">Set Board</button>
     </form>
     <table id="table">
         <tr th:each="row : ${board.board}">
@@ -32,27 +32,28 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const cells = document.querySelectorAll('td.cell');
-        
+
         cells.forEach(cell => {
             cell.addEventListener('click', () => {
-                document.querySelectorAll('input.highlight').forEach(input => input.classList.remove('highlight'));
-                document.querySelectorAll('input.select').forEach(input => input.classList.remove('select'));
-                
+                deleteHighlights();
+            	
                 const input = cell.querySelector('input');
+                if (input.value === '') return;
+
                 input.classList.add('highlight');
                 input.select();
-                
+
                 const rowIndex = cell.parentElement.rowIndex;
                 const colIndex = cell.cellIndex;
                 const val = input.value;
-                
+
                 cells.forEach(c => {
                     const cInput = c.querySelector('input');
                     if (cInput) {
                         const isSameRow = c.parentElement.rowIndex === rowIndex;
                         const isSameCol = c.cellIndex === colIndex;
-                        
-                        if (cInput.value !== '' && cInput.value === val) {
+
+                        if (cInput.value === val) {
                             cInput.classList.add('select');
                         } else if (isSameRow || isSameCol) {
                             cInput.classList.add('highlight');
@@ -62,36 +63,91 @@
             });
         });
 
-        const inputs = document.querySelectorAll('input');
-        inputs.forEach(input => {
+        document.querySelectorAll('input').forEach(input => {
             let previousValue = input.value;
 
             input.addEventListener('input', () => {
-                if (input.hasAttribute('readonly')) {
-                    return;
-                }
-                
-                const value = input.value;
-                const lastDigitMatch = value.match(/[1-9](?!.*[1-9])/);
-                if (value === "" || lastDigitMatch) {
-                	input.value = lastDigitMatch ? lastDigitMatch[0] : "";
-                    previousValue = lastDigitMatch ? lastDigitMatch[0] : "";
+                if (input.hasAttribute('readonly')) return;
+
+                const value = input.value.match(/^[1-9]$/);
+                if (value || input.value === '') {
+                    input.setAttribute('value', input.value === '' ? '' : value[0]);
+                    previousValue = input.value;
+                    
+                    deleteConflictHighlights();
                 } else {
+                    input.setAttribute('value', previousValue);
                     input.value = previousValue;
                 }
+                
+                updateBoard(input);
+
+                const cell = input.closest('td.cell');
+                if (cell) cell.click();
             });
         });
     });
 
-    function updateDependentWidth() {
-        const table = document.getElementById('table');
-        const tableWidth = table.offsetWidth;
-        
-        document.getElementById('header').style.width = `${tableWidth}px`;
+    function updateBoard(input) {
+        const board = [];
+        document.querySelectorAll('#table tr').forEach((rowElement) => {
+            const boardRow = [];
+            rowElement.querySelectorAll('td input').forEach((cellElement) => {
+                boardRow.push({
+                    value: cellElement.value ? parseInt(cellElement.value, 10) : null,
+                    readOnly: cellElement.hasAttribute('readonly')
+                });
+            });
+            board.push(boardRow);
+        });
+
+        fetch('/updateBoard', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ board: board }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.gameover) {
+                console.log('game over!!');
+            }
+            
+            deleteConflictHighlights();
+            const conflicts = data.conflicts;
+            
+            if (input.value) {
+            	document.querySelectorAll('#table tr').forEach((rowElement, r) => {
+                    rowElement.querySelectorAll('td input').forEach((cellElement, c) => {
+                    	if (cellElement.value && (r === input.closest('tr').rowIndex && c === input.closest('td').cellIndex && conflicts[r][c] === true)) {
+    						cellElement.classList.add('conflict-select');
+    					} else if (cellElement.value && conflicts[r][c] === true) {
+    	                    cellElement.classList.add('conflict');
+    					}
+                    });
+                });
+            }
+        })
+        .catch(error => console.error('Error:', error));
     }
     
-    window.onload = updateDependentWidth;
-    window.onresize = updateDependentWidth;
+    function deleteHighlights() {
+    	document.querySelectorAll('input.highlight').forEach(input => input.classList.remove('highlight'));
+        document.querySelectorAll('input.select').forEach(input => input.classList.remove('select'));
+    }
+    
+    function deleteConflictHighlights() {
+        document.querySelectorAll('input.conflict').forEach(input => input.classList.remove('conflict'));
+        document.querySelectorAll('input.conflict-select').forEach(input => input.classList.remove('conflict-select'));
+    }
+
+    function updateDependentWidth() {
+        document.getElementById('header').style.width = `${document.getElementById('table').offsetWidth}px`;
+    }
+
+    window.addEventListener('load', updateDependentWidth);
+    window.addEventListener('resize', updateDependentWidth);
     </script>
 </body>
 </html>

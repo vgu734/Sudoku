@@ -3,6 +3,9 @@ package com.vgu734.sudoku.model;
 public class Cell {
     private Integer value;
     private boolean readOnly;
+    
+    public Cell() {
+    }
 
     public Cell(Integer value, boolean readOnly) {
         this.value = value;
